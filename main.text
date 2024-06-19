@@ -1,0 +1,138 @@
+#Q10 - Set Manipulation Algorithm by Union-Find (Find Function, Union Function, Path Compression (Modications to Find()):)
+#Find Function
+def find(i):
+    if parent[i] == i:
+        return i
+    else:
+        return find(parent[i])
+#Union Function
+def union(parent, rank, i, j):
+        irep = find(parent, i)
+        jrep = find(parent, j)
+        parent[irep] = jrep
+#Path Compression (Modifications to Find())
+def find(i):
+        if Parent[i] == i:
+            return i
+        else:
+            result = find(Parent[i])
+            Parent[i] = result
+            return result
+
+
+
+
+
+#Q11 - Union by Rank and Union by Size
+#Union by Rank
+class DisjointSet:
+    def __init__(self, size):
+        self.parent = [i for i in range(size)]
+        self.rank = [0] * size
+
+    def find(self, i):
+        if self.parent[i] != i:
+            self.parent[i] = self.find(self.parent[i])
+        return self.parent[i]
+
+    def union_by_rank(self, i, j):
+        irep = self.find(i)
+        jrep = self.find(j)
+
+        if irep == jrep:
+            return
+
+        irank = self.rank[irep]
+        jrank = self.rank[jrep]
+
+        if irank < jrank:
+            self.parent[irep] = jrep
+        elif jrank < irank:
+            self.parent[jrep] = irep
+        else:
+            self.parent[irep] = jrep
+            self.rank[jrep] += 1
+
+def main():
+    size = 5
+    ds = DisjointSet(size)
+    ds.union_by_rank(0, 1)
+    ds.union_by_rank(2, 3)
+    ds.union_by_rank(1, 3)
+    for i in range(size):
+        print(f"Element {i} belongs to the set with representative {ds.find(i)}")
+
+if __name__ == "__main__":
+    main()
+#Union by Size
+class UnionFind:
+        def __init__(self, n):
+                self.Parent = list(range(n))
+                self.Size = [1] * n
+
+        def find(self, i):
+                if self.Parent[i] != i:
+                        self.Parent[i] = self.find(self.Parent[i])
+                return self.Parent[i]
+
+        def unionBySize(self, i, j):
+                    irep = self.find(i)
+                    jrep = self.find(j)
+                    if irep == jrep:
+                            return
+                    isize = self.Size[irep]
+                    jsize = self.Size[jrep]
+
+                    if isize < jsize:
+                            self.Parent[irep] = jrep
+                            self.Size[jrep] += self.Size[irep]
+                    else:
+                            self.Parent[jrep] = irep
+                            self.Size[irep] += self.Size[jrep]
+n = 5
+unionFind = UnionFind(n)
+unionFind.unionBySize(0, 1)
+unionFind.unionBySize(2, 3)
+unionFind.unionBySize(0, 4)
+
+for i in range(n):
+        print("Element {}: Representative = {}".format(i, unionFind.find(i)))
+
+
+
+
+#Q12 -The complete implementation of disjoint set with path compression and union by rank
+class DisjSet:
+        def __init__(self, n):
+                self.rank = [1] * n
+                self.parent = [i for i in range(n)]
+
+        def find(self, x):
+                if (self.parent[x] != x):
+                        self.parent[x] = self.find(self.parent[x])
+                return self.parent[x]
+
+        def Union(self, x, y):
+                xset = self.find(x)
+                yset = self.find(y)
+                if xset == yset:
+                        return
+                if self.rank[xset] < self.rank[yset]:
+                        self.parent[xset] = yset
+                elif self.rank[xset] > self.rank[yset]:
+                        self.parent[yset] = xset
+                else:
+                        self.parent[yset] = xset
+                        self.rank[xset] = self.rank[xset] + 1
+obj = DisjSet(5)
+obj.Union(0, 2)
+obj.Union(4, 2)
+obj.Union(3, 1)
+if obj.find(4) == obj.find(0):
+        print('Yes')
+else:
+        print('No')
+if obj.find(1) == obj.find(0):
+        print('Yes')
+else:
+        print('No')
